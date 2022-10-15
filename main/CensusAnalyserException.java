@@ -1,9 +1,8 @@
 package main;
 
-
 public class CensusAnalyserException extends Exception {
 
-   public enum ExceptionType {
+    public enum ExceptionType {
         CENSUS_FILE_PROBLEM, CENSUS_INCORRECT_FILE_FORMAT, CENSUS_WRONG_DELIMITER_OR_WRONG_HEADER
     }
 

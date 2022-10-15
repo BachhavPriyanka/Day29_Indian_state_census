@@ -6,10 +6,11 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.stream.StreamSupport;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+
+import main.CensusAnalyserException.ExceptionType;
 
 public class CensusAnalyser {
 
@@ -17,10 +18,9 @@ public class CensusAnalyser {
     	
     	try {
     		
-    		if(csvFilePath.contains(".txt")) {
-    			throw new CensusAnalyserException("File must be in CSV Format", main.CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
+    		if(csvFilePath.contains("txt")) {
+    			throw new CensusAnalyserException("File must be in CSV Format", ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
     		}
-    		
     		Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
     		CsvToBeanBuilder<IndianCensusCSV> csvToBeanBuilder = new CsvToBeanBuilder<IndianCensusCSV>(reader);
     		csvToBeanBuilder.withType(IndianCensusCSV.class);
@@ -43,34 +43,5 @@ public class CensusAnalyser {
     	}
     }
     
-    public int loadIndianStateCode(String csvFilePath) throws CensusAnalyserException {
-    	
-        try {
-        	
-        	if(csvFilePath.contains(".txt")) {
-    			throw new CensusAnalyserException("File must be in CSV Format", main.CensusAnalyserException.ExceptionType.CENSUS_INCORRECT_FILE_FORMAT);
-    		}
-        	
-        	Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
-            CsvToBeanBuilder<IndiaStateCSV> csvToBeanBuilder = new CsvToBeanBuilder<IndiaStateCSV>(reader);
-            csvToBeanBuilder.withType(IndiaStateCSV.class);
-            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-            CsvToBean<IndiaStateCSV> csvToBean = csvToBeanBuilder.build();
-            Iterator<IndiaStateCSV> stateCodesCSVIterator = csvToBean.iterator();
-            
-            int numberOfEntries = 0;
-    		while(stateCodesCSVIterator.hasNext()) {
-    			numberOfEntries++;
-    			IndiaStateCSV censusData = stateCodesCSVIterator.next();
-    		}
-    		return numberOfEntries;
-        } 
-        catch (IOException e) {
-            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        } 
-        catch(RuntimeException e) {
-    		throw new CensusAnalyserException("CSV File Must Have Comma As Delimiter Or Has Incorrect Header", main.CensusAnalyserException.ExceptionType.CENSUS_WRONG_DELIMITER_OR_WRONG_HEADER);
-    	}
-    }    
     
 }
